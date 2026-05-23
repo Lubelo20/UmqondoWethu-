@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umqondo — Automotive Logistics & Dealership Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+/* ════════════════════════════════════
+   TOKENS
+════════════════════════════════════ */
+:root {
+  --white:    #FFFFFF;
+  --snow:     #F8F8F6;
+  --rule:     #E4E4DF;
+  --mist:     #F2F1EE;
+  --ink:      #0D0D0D;
+  --navy:     #0C1B33;
+  --steel:    #4A5568;
+  --muted:    #8A9AB0;
+  --red:      #C8102E;
+  --red-soft: rgba(200,16,46,0.08);
+
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'Outfit', sans-serif;
+
+  --max: 1240px;
+  --pad: clamp(1.5rem, 5vw, 5rem);
+}
+
+/* ════════════════════════════════════
+   RESET
+════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body { font-family:var(--sans); background:var(--white); color:var(--ink); overflow-x:hidden; }
+img  { display:block; max-width:100%; }
+a    { text-decoration:none; color:inherit; }
+ul   { list-style:none; }
+button { font-family:inherit; cursor:pointer; border:none; background:none; }
+
+::-webkit-scrollbar            { width:3px; }
+::-webkit-scrollbar-track      { background:var(--white); }
+::-webkit-scrollbar-thumb      { background:var(--red); }
+
+/* ════════════════════════════════════
+   UTILITY
+════════════════════════════════════ */
+.container { max-width:var(--max); margin:0 auto; padding:0 var(--pad); }
+.label {
+  font-family:var(--sans);
+  font-size:.7rem; font-weight:600; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--red);
+  display:flex; align-items:center; gap:.6rem;
+}
+.label::before {
+  content:''; display:block;
+  width:24px; height:1.5px; background:var(--red);
+}
+
+/* scroll reveal */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .75s ease, transform .75s ease; }
+.reveal.in { opacity:1; transform:translateY(0); }
+.delay-1 { transition-delay:.1s; }
+.delay-2 { transition-delay:.2s; }
+.delay-3 { transition-delay:.3s; }
+.delay-4 { transition-delay:.4s; }
+
+/* ════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════ */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:900;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--rule);
+  transition:box-shadow .3s;
+}
+.nav.scrolled { box-shadow:0 4px 40px rgba(0,0,0,.06); }
+
+.nav__inner {
+  display:flex; align-items:center; justify-content:space-between;
+  height:72px;
+}
+.nav__logo {
+  display:flex; align-items:center; gap:.75rem;
+  font-family:var(--sans); font-size:1.1rem; font-weight:600;
+  letter-spacing:.06em; color:var(--navy);
+}
+.nav__logo-hex {
+  width:32px; height:32px;
+  background:var(--navy);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:grid; place-items:center;
+  font-size:.65rem; font-weight:700; color:var(--white);
+}
+.nav__links {
+  display:flex; align-items:center; gap:2.4rem;
+}
+.nav__links a {
+  font-size:.82rem; font-weight:500; letter-spacing:.04em;
+  color:var(--steel); transition:color .2s;
+  position:relative; padding-bottom:2px;
+}
+.nav__links a::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:1px; background:var(--red);
+  transition:width .25s ease;
+}
+.nav__links a:hover { color:var(--ink); }
+.nav__links a:hover::after { width:100%; }
+.nav__cta {
+  background:var(--red); color:var(--white) !important;
+  padding:.55rem 1.4rem; border-radius:3px;
+  font-size:.82rem !important; font-weight:500 !important;
+  transition:opacity .2s !important;
+}
+.nav__cta:hover { opacity:.85 !important; }
+.nav__cta::after { display:none !important; }
+.nav__phone {
+  display:flex; align-items:center; gap:.5rem;
+  font-size:.78rem; color:var(--muted);
+  padding-left:2rem; border-left:1px solid var(--rule);
+}
+.hamburger {
+  display:none; flex-direction:column; gap:5px;
+  padding:4px; background:none; border:none; cursor:pointer;
+}
+.hamburger span { display:block; width:22px; height:1.5px; background:var(--ink); transition:all .3s; }
+
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+.hero {
+  min-height:100vh;
+  display:grid; grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding-top:72px;
+}
+
+.hero__left {
+  padding:8rem var(--pad) 8rem 0;
+  padding-left:calc((100vw - var(--max)) / 2 + var(--pad));
+}
+
+.hero__eyebrow {
+  display:flex; align-items:center; gap:.6rem;
+  font-size:.7rem; font-weight:600; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--red);
+  margin-bottom:2rem;
+  animation:fadeUp .8s ease .1s both;
+}
+.hero__eyebrow::before { content:''; display:block; width:24px; height:1.5px; background:var(--red); }
+
+.hero__h1 {
+  font-family:var(--serif);
+  font-size:clamp(3rem,5.5vw,5.5rem);
+  font-weight:300; line-height:1.08;
+  letter-spacing:-.01em; color:var(--navy);
+  animation:fadeUp .8s ease .2s both;
+}
+.hero__h1 em { font-style:italic; color:var(--red); }
+
+.hero__sub {
+  margin-top:1.8rem;
+  font-size:1rem; line-height:1.8; color:var(--steel);
+  font-weight:300; max-width:480px;
+  animation:fadeUp .8s ease .35s both;
+}
+
+.hero__actions {
+  display:flex; gap:1rem; align-items:center;
+  margin-top:2.5rem;
+  animation:fadeUp .8s ease .5s both;
+}
+.btn {
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-size:.85rem; font-weight:500; letter-spacing:.04em;
+  padding:.8rem 2rem; border-radius:3px;
+  transition:all .25s ease;
+}
+.btn--primary {
+  background:var(--navy); color:var(--white);
+}
+.btn--primary:hover { background:var(--red); }
+.btn--ghost {
+  background:transparent; color:var(--navy);
+  border:1px solid var(--rule);
+}
+.btn--ghost:hover { border-color:var(--navy); }
+
+.hero__stats {
+  display:flex; gap:2.5rem; margin-top:4rem;
+  padding-top:2.5rem; border-top:1px solid var(--rule);
+  animation:fadeUp .8s ease .65s both;
+}
+.hero__stat-num {
+  font-family:var(--serif);
+  font-size:2.4rem; font-weight:400; color:var(--navy); line-height:1;
+}
+.hero__stat-label {
+  font-size:.72rem; color:var(--muted); letter-spacing:.08em;
+  text-transform:uppercase; margin-top:.3rem;
+}
+
+/* Hero right — graphic panel */
+.hero__right {
+  height:100%; background:var(--mist);
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  position:relative; overflow:hidden;
+  padding:6rem 4rem;
+}
+.hero__right::before {
+  content:''; position:absolute; top:0; left:0; bottom:0; width:1px;
+  background:linear-gradient(to bottom, transparent, var(--rule), transparent);
+}
+.hero__graphic {
+  position:relative; width:100%; max-width:480px;
+  animation:fadeUp .9s ease .4s both;
+}
+.hero__card-main {
+  background:var(--white);
+  border:1px solid var(--rule); border-radius:8px;
+  padding:2rem 2rem 1.5rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.06);
+}
+.hero__card-tag {
+  font-size:.68rem; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted);
+  margin-bottom:1.2rem;
+}
+.hero__card-metrics {
+  display:grid; grid-template-columns:1fr 1fr; gap:1px;
+  background:var(--rule); border-radius:4px; overflow:hidden;
+  margin-bottom:1.5rem;
+}
+.hero__card-metric {
+  background:var(--white); padding:1.2rem 1rem;
+}
+.hero__card-metric-val {
+  font-family:var(--serif); font-size:1.8rem; font-weight:400;
+  color:var(--navy); line-height:1;
+}
+.hero__card-metric-label {
+  font-size:.7rem; color:var(--muted); margin-top:.25rem;
+}
+.hero__card-bar-wrap { display:flex; flex-direction:column; gap:.5rem; }
+.hero__card-bar-row {
+  display:flex; align-items:center; gap:.8rem; font-size:.75rem; color:var(--steel);
+}
+.hero__card-bar-track {
+  flex:1; height:4px; background:var(--rule); border-radius:2px; overflow:hidden;
+}
+.hero__card-bar-fill {
+  height:100%; background:var(--red); border-radius:2px;
+  animation:barFill 1.4s ease .8s both;
+  transform-origin:left;
+}
+@keyframes barFill { from { transform:scaleX(0); } }
+
+.hero__pill {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--white); border:1px solid var(--rule);
+  border-radius:100px; padding:.45rem 1rem;
+  font-size:.72rem; color:var(--steel);
+  margin-top:1.2rem; box-shadow:0 4px 12px rgba(0,0,0,.04);
+}
+.hero__pill-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:#22C55E; animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+.hero__badge {
+  position:absolute; top:3rem; right:2rem;
+  background:var(--navy); color:var(--white);
+  border-radius:8px; padding:1rem 1.2rem; text-align:center;
+  box-shadow:0 12px 40px rgba(12,27,51,.2);
+  animation:fadeUp .8s ease .7s both;
+}
+.hero__badge strong {
+  display:block; font-family:var(--serif);
+  font-size:2rem; font-weight:400; line-height:1;
+}
+.hero__badge span { font-size:.68rem; color:rgba(255,255,255,.6); letter-spacing:.06em; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ════════════════════════════════════
+   CLIENTS BAR
+════════════════════════════════════ */
+.clients {
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  padding:2rem 0;
+  overflow:hidden;
+}
+.clients__label {
+  text-align:center;
+  font-size:.68rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:1.5rem;
+}
+.clients__track {
+  display:flex; gap:3rem; align-items:center;
+  animation:slide 22s linear infinite; white-space:nowrap;
+}
+.clients__item {
+  flex-shrink:0; font-family:var(--sans);
+  font-size:.85rem; font-weight:600; letter-spacing:.06em;
+  color:var(--rule); text-transform:uppercase;
+  padding:.4rem 1.2rem;
+  border:1px solid var(--rule); border-radius:4px;
+  transition:all .3s;
+}
+.clients__item:hover { color:var(--steel); border-color:var(--steel); }
+@keyframes slide { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ════════════════════════════════════
+   SECTION SHARED
+════════════════════════════════════ */
+.section { padding:clamp(5rem,10vw,9rem) 0; }
+.section--mist { background:var(--mist); }
+.section--navy { background:var(--navy); }
+
+.section__header { margin-bottom:clamp(3rem,6vw,5rem); }
+.section__header--center { text-align:center; }
+.section__header--center .section__sub { margin:0 auto; }
+
+.section__h2 {
+  font-family:var(--serif);
+  font-size:clamp(2.2rem,4vw,3.8rem);
+  font-weight:300; line-height:1.1; color:var(--navy);
+  margin-top:.8rem; letter-spacing:-.01em;
+}
+.section__h2 em { font-style:italic; color:var(--red); }
+.section__h2--light { color:var(--white); }
+
+.section__sub {
+  font-size:.95rem; line-height:1.8; color:var(--steel);
+  font-weight:300; max-width:520px; margin-top:.9rem;
+}
+.section__sub--light { color:rgba(255,255,255,.55); }
+
+/* ════════════════════════════════════
+   SERVICES
+════════════════════════════════════ */
+.services__grid {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  border:1px solid var(--rule); border-radius:6px;
+  overflow:hidden; background:var(--rule);
+  gap:1px;
+}
+.service-card {
+  background:var(--white); padding:2.5rem 2rem 2rem;
+  display:flex; flex-direction:column;
+  position:relative; overflow:hidden;
+  transition:box-shadow .3s;
+  cursor:default;
+}
+.service-card::after {
+  content:''; position:absolute;
+  bottom:0; left:0; right:100%; height:2px;
+  background:var(--red); transition:right .35s ease;
+}
+.service-card:hover { box-shadow:0 0 0 0 transparent; z-index:2; }
+.service-card:hover::after { right:0; }
+.service-card:hover .service-card__num { color:var(--red); }
+
+.service-card__num {
+  font-family:var(--serif); font-size:2.5rem; font-weight:300;
+  color:var(--rule); line-height:1;
+  transition:color .3s; margin-bottom:1.5rem;
+}
+.service-card__icon {
+  width:40px; height:40px;
+  background:var(--mist); border-radius:8px;
+  display:grid; place-items:center;
+  margin-bottom:1.2rem;
+  transition:background .3s;
+}
+.service-card:hover .service-card__icon { background:var(--red-soft); }
+.service-card__h3 {
+  font-family:var(--serif); font-size:1.2rem; font-weight:500;
+  color:var(--navy); line-height:1.25; margin-bottom:.6rem;
+}
+.service-card__p {
+  font-size:.85rem; line-height:1.75; color:var(--steel);
+  font-weight:300; flex:1;
+}
+.service-card__link {
+  display:inline-flex; align-items:center; gap:.4rem;
+  font-size:.75rem; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--red);
+  margin-top:1.4rem;
+  transition:gap .2s;
+}
+.service-card:hover .service-card__link { gap:.7rem; }
+
+/* ════════════════════════════════════
+   PROCESS
+════════════════════════════════════ */
+.process__layout {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:clamp(3rem,7vw,8rem); align-items:start;
+}
+.process__steps { display:flex; flex-direction:column; }
+.process__step {
+  display:grid; grid-template-columns:48px 1fr;
+  gap:1.5rem; padding:2rem 0;
+  border-bottom:1px solid var(--rule);
+  transition:all .3s; cursor:default;
+}
+.process__step:first-child { border-top:1px solid var(--rule); }
+.process__step:hover .process__step-num { background:var(--red); border-color:var(--red); color:var(--white); }
+.process__step-num {
+  width:40px; height:40px; border-radius:50%;
+  border:1px solid var(--rule);
+  display:grid; place-items:center;
+  font-size:.8rem; font-weight:600; color:var(--muted);
+  flex-shrink:0; align-self:start; margin-top:2px;
+  transition:all .3s;
+}
+.process__step-h { font-size:1rem; font-weight:600; color:var(--navy); margin-bottom:.4rem; }
+.process__step-p { font-size:.875rem; line-height:1.75; color:var(--steel); font-weight:300; }
+
+/* Process visual */
+.process__visual {
+  position:sticky; top:120px;
+  background:var(--navy); border-radius:12px;
+  padding:2.5rem; color:var(--white);
+  overflow:hidden;
+}
+.process__visual::before {
+  content:''; position:absolute; top:-60px; right:-60px;
+  width:220px; height:220px; border-radius:50%;
+  background:rgba(200,16,46,.08);
+}
+.process__visual-label {
+  font-size:.68rem; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(255,255,255,.4); margin-bottom:2rem;
+}
+.process__metrics { display:flex; flex-direction:column; gap:1rem; }
+.process__metric {
+  padding:1.2rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:6px;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:background .2s;
+}
+.process__metric:hover { background:rgba(200,16,46,.1); border-color:rgba(200,16,46,.2); }
+.process__metric-label { font-size:.78rem; color:rgba(255,255,255,.55); }
+.process__metric-val {
+  font-family:var(--serif); font-size:1.4rem; font-weight:400; color:var(--white);
+}
+.process__divider { height:1px; background:rgba(255,255,255,.08); margin:1.5rem 0; }
+.process__status {
+  display:flex; align-items:center; gap:.6rem;
+  font-size:.75rem; color:rgba(255,255,255,.5);
+}
+.process__status-dot { width:6px; height:6px; border-radius:50%; background:#22C55E; }
+
+/* ════════════════════════════════════
+   ABOUT SPLIT
+════════════════════════════════════ */
+.about__layout {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:clamp(3rem,7vw,8rem); align-items:center;
+}
+.about__img {
+  background:var(--mist); border-radius:8px;
+  aspect-ratio:4/5; overflow:hidden; position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.about__img-inner {
+  width:100%; height:100%;
+  background:linear-gradient(160deg, var(--mist) 0%, #E8EBF0 100%);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:1.5rem;
+  padding:3rem;
+}
+.about__img-year {
+  font-family:var(--serif); font-size:6rem; font-weight:300;
+  color:rgba(12,27,51,.08); line-height:1; text-align:center;
+  letter-spacing:-.02em;
+}
+.about__badge {
+  background:var(--red); color:var(--white);
+  padding:1.4rem 2rem; border-radius:6px;
+  text-align:center; align-self:flex-end;
+  box-shadow:0 20px 50px rgba(200,16,46,.25);
+}
+.about__badge strong {
+  display:block; font-family:var(--serif);
+  font-size:2.5rem; font-weight:400; line-height:1;
+}
+.about__badge span { font-size:.72rem; opacity:.8; letter-spacing:.06em; }
+
+.about__text p {
+  font-size:.95rem; line-height:1.85; color:var(--steel);
+  font-weight:300; margin-bottom:1.2rem;
+}
+.about__text p strong { color:var(--navy); font-weight:500; }
+.about__values { margin-top:2rem; display:flex; flex-direction:column; gap:.7rem; }
+.about__value {
+  display:flex; gap:.8rem; align-items:baseline;
+  font-size:.875rem; color:var(--steel); font-weight:300;
+}
+.about__value::before {
+  content:''; flex-shrink:0; width:5px; height:5px;
+  border-radius:50%; background:var(--red); margin-top:.45rem;
+}
+
+/* ════════════════════════════════════
+   STATS BAND
+════════════════════════════════════ */
+.stats-band {
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  padding:4rem 0;
+}
+.stats-band__grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  divide-x: 1px solid var(--rule);
+  text-align:center;
+}
+.stats-band__item {
+  padding:1rem 1.5rem;
+  border-right:1px solid var(--rule);
+}
+.stats-band__item:last-child { border-right:none; }
+.stats-band__num {
+  font-family:var(--serif);
+  font-size:clamp(2.4rem,4vw,3.5rem); font-weight:300;
+  color:var(--navy); line-height:1;
+}
+.stats-band__num span { color:var(--red); }
+.stats-band__label {
+  font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin-top:.4rem;
+}
+
+/* ════════════════════════════════════
+   TEAM
+════════════════════════════════════ */
+.team__grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;
+}
+.team-card {
+  cursor:default;
+}
+.team-card__img {
+  aspect-ratio:3/4; background:var(--mist);
+  border-radius:6px; overflow:hidden; margin-bottom:1rem;
+  display:flex; align-items:flex-end; justify-content:flex-start;
+  padding:1rem; position:relative;
+}
+.team-card__img-bg {
+  position:absolute; inset:0;
+  background:linear-gradient(160deg, var(--mist) 0%, #D8DCE6 100%);
+}
+.team-card__avatar {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-60%);
+  font-size:3.5rem; line-height:1;
+}
+.team-card__overlay {
+  position:absolute; bottom:0; left:0; right:0;
+  height:50%; background:linear-gradient(to top, rgba(12,27,51,.5), transparent);
+}
+.team-card__name { font-size:.95rem; font-weight:600; color:var(--navy); }
+.team-card__role { font-size:.75rem; color:var(--red); font-weight:500; letter-spacing:.04em; margin-top:.15rem; }
+
+/* ════════════════════════════════════
+   CONTACT
+════════════════════════════════════ */
+.contact__layout {
+  display:grid; grid-template-columns:2fr 3fr;
+  gap:clamp(3rem,7vw,8rem);
+  align-items:start;
+}
+.contact__info { padding-top:.5rem; }
+.contact__info-items { display:flex; flex-direction:column; gap:1.8rem; margin-top:2rem; }
+.contact__info-item { display:flex; gap:1rem; }
+.contact__info-icon {
+  width:36px; height:36px; flex-shrink:0;
+  background:var(--mist); border-radius:6px;
+  display:grid; place-items:center; font-size:.95rem;
+}
+.contact__info-label { font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.25rem; }
+.contact__info-val { font-size:.9rem; color:var(--navy); font-weight:500; }
+.contact__info-val a { color:var(--navy); transition:color .2s; }
+.contact__info-val a:hover { color:var(--red); }
+
+.wa-link {
+  display:inline-flex; align-items:center; gap:.7rem;
+  background:#22C55E; color:var(--white);
+  padding:.75rem 1.5rem; border-radius:4px;
+  font-size:.82rem; font-weight:600;
+  margin-top:2rem; transition:opacity .2s;
+}
+.wa-link:hover { opacity:.9; }
+
+.contact__form {
+  background:var(--mist); border-radius:8px;
+  padding:clamp(2rem,4vw,3rem);
+}
+.contact__form h3 {
+  font-family:var(--serif); font-size:1.6rem; font-weight:400;
+  color:var(--navy); margin-bottom:2rem;
+}
+.form__row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form__group { margin-bottom:1rem; }
+.form__label {
+  display:block; font-size:.68rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:.4rem;
+}
+.form__input, .form__select, .form__textarea {
+  width:100%; background:var(--white);
+  border:1px solid var(--rule); border-radius:4px;
+  padding:.75rem 1rem; font-size:.9rem; font-weight:300;
+  font-family:var(--sans); color:var(--ink);
+  outline:none; transition:border-color .2s;
+  -webkit-appearance:none;
+}
+.form__input:focus, .form__select:focus, .form__textarea:focus {
+  border-color:var(--navy);
+}
+.form__textarea { resize:vertical; min-height:100px; }
+.form__select option { background:var(--white); }
+.form__submit {
+  width:100%; background:var(--navy); color:var(--white);
+  padding:.9rem; border-radius:4px; font-size:.85rem;
+  font-weight:500; letter-spacing:.04em;
+  transition:background .2s; cursor:pointer;
+  border:none; font-family:var(--sans);
+  display:flex; align-items:center; justify-content:center; gap:.5rem;
+}
+.form__submit:hover { background:var(--red); }
+
+/* ════════════════════════════════════
+   FOOTER
+════════════════════════════════════ */
+.footer {
+  background:var(--navy); color:var(--white);
+  padding:5rem 0 2.5rem;
+}
+.footer__top {
+  display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr;
+  gap:3rem; padding-bottom:3.5rem;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.footer__brand-tagline {
+  font-size:.85rem; line-height:1.8;
+  color:rgba(255,255,255,.45); margin-top:1rem; max-width:280px;
+  font-weight:300;
+}
+.footer__logo {
+  display:flex; align-items:center; gap:.7rem;
+  font-size:1rem; font-weight:600; letter-spacing:.06em;
+}
+.footer__logo-hex {
+  width:28px; height:28px;
+  background:var(--red);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:grid; place-items:center;
+  font-size:.55rem; font-weight:700;
+}
+.footer__col-h {
+  font-size:.7rem; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(255,255,255,.35);
+  margin-bottom:1.2rem;
+}
+.footer__col-links { display:flex; flex-direction:column; gap:.6rem; }
+.footer__col-links a {
+  font-size:.85rem; color:rgba(255,255,255,.55);
+  font-weight:300; transition:color .2s;
+}
+.footer__col-links a:hover { color:var(--white); }
+
+.footer__bottom {
+  padding-top:2rem;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:.75rem; color:rgba(255,255,255,.3);
+  flex-wrap:wrap; gap:1rem;
+}
+.footer__bottom-links { display:flex; gap:1.5rem; }
+.footer__bottom-links a { color:rgba(255,255,255,.3); transition:color .2s; }
+.footer__bottom-links a:hover { color:rgba(255,255,255,.7); }
+
+/* ════════════════════════════════════
+   MOBILE NAV OVERLAY
+════════════════════════════════════ */
+.mobile-menu {
+  position:fixed; inset:0; z-index:950;
+  background:var(--white);
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center; gap:2rem;
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+.mobile-menu.open { opacity:1; pointer-events:all; }
+.mobile-menu a {
+  font-family:var(--serif); font-size:2.5rem; font-weight:300;
+  color:var(--navy); transition:color .2s;
+}
+.mobile-menu a:hover { color:var(--red); }
+.mobile-menu__close {
+  position:absolute; top:1.5rem; right:1.5rem;
+  font-size:1.5rem; color:var(--steel); cursor:pointer;
+  background:none; border:none;
+}
+
+/* ════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════ */
+@media(max-width:1024px) {
+  .hero { grid-template-columns:1fr; min-height:auto; }
+  .hero__left { padding:7rem var(--pad) 4rem; }
+  .hero__right { display:none; }
+  .about__layout, .process__layout, .contact__layout { grid-template-columns:1fr; }
+  .process__visual { position:relative; top:0; }
+  .about__img { display:none; }
+  .team__grid { grid-template-columns:repeat(2,1fr); }
+  .footer__top { grid-template-columns:1fr 1fr; }
+  .stats-band__grid { grid-template-columns:repeat(2,1fr); }
+  .stats-band__item:nth-child(2) { border-right:none; }
+  .stats-band__item:nth-child(3) { border-top:1px solid var(--rule); }
+}
+@media(max-width:768px) {
+  .nav__links, .nav__phone { display:none; }
+  .hamburger { display:flex; }
+  .services__grid { grid-template-columns:1fr; }
+  .form__row { grid-template-columns:1fr; }
+  .team__grid { grid-template-columns:repeat(2,1fr); }
+  .footer__top { grid-template-columns:1fr; }
+  .footer__bottom { flex-direction:column; text-align:center; }
+  .stats-band__grid { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:480px) {
+  .team__grid { grid-template-columns:1fr; }
+  .hero__stats { flex-direction:column; gap:1.5rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu__close" id="mobileClose">✕</button>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#process" onclick="closeMobile()">Process</a>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#team" onclick="closeMobile()">Team</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <div class="nav__logo-hex">U</div>
+        UMQONDO<span style="color:var(--red)">WETHU</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#contact" class="nav__cta">Get a Quote</a></li>
+      </ul>
+      <div class="nav__phone">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.7A16 16 0 0 0 15.3 16l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +27 84 908 6321
+      </div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="top">
+  <div class="hero__left">
+    <div class="hero__eyebrow">Automotive Logistics & Dealership Support</div>
+    <h1 class="hero__h1">
+      Moving Vehicles.<br>
+      <em>Powering Dealerships.</em><br>
+      Across South Africa.
+    </h1>
+    <p class="hero__sub">
+      Umqondo delivers end-to-end automotive logistics, professional driver supply, stock yard management, and dealership digital solutions — with 16 years of trusted service nationwide.
+    </p>
+    <div class="hero__actions">
+      <a href="#contact" class="btn btn--primary">
+        Request a Quote
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#services" class="btn btn--ghost">View Services</a>
+    </div>
+    <div class="hero__stats">
+      <div>
+        <div class="hero__stat-num">16+</div>
+        <div class="hero__stat-label">Years Experience</div>
+      </div>
+      <div>
+        <div class="hero__stat-num">98%</div>
+        <div class="hero__stat-label">Client Satisfaction</div>
+      </div>
+      <div>
+        <div class="hero__stat-num">RSA</div>
+        <div class="hero__stat-label">Nationwide</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__right">
+    <div class="hero__badge">
+      <strong>16+</strong>
+      <span>Years of Service</span>
+    </div>
+    <div class="hero__graphic">
+      <div class="hero__card-main">
+        <div class="hero__card-tag">Live Operations Dashboard</div>
+        <div class="hero__card-metrics">
+          <div class="hero__card-metric">
+            <div class="hero__card-metric-val">142</div>
+            <div class="hero__card-metric-label">Active Stock Units</div>
+          </div>
+          <div class="hero__card-metric">
+            <div class="hero__card-metric-val">18</div>
+            <div class="hero__card-metric-label">Drivers On Route</div>
+          </div>
+          <div class="hero__card-metric">
+            <div class="hero__card-metric-val">97%</div>
+            <div class="hero__card-metric-label">On-Time Rate</div>
+          </div>
+          <div class="hero__card-metric">
+            <div class="hero__card-metric-val">R2.4M</div>
+            <div class="hero__card-metric-label">Fleet Value Managed</div>
+          </div>
+        </div>
+        <div class="hero__card-bar-wrap">
+          <div class="hero__card-bar-row">
+            <span>Vehicle Movements</span>
+            <div class="hero__card-bar-track"><div class="hero__card-bar-fill" style="width:88%"></div></div>
+            <span style="font-size:.7rem;color:var(--muted)">88%</span>
+          </div>
+          <div class="hero__card-bar-row">
+            <span>Driver Utilisation</span>
+            <div class="hero__card-bar-track"><div class="hero__card-bar-fill" style="width:94%;animation-delay:1s"></div></div>
+            <span style="font-size:.7rem;color:var(--muted)">94%</span>
+          </div>
+          <div class="hero__card-bar-row">
+            <span>Stock Yard Capacity</span>
+            <div class="hero__card-bar-track"><div class="hero__card-bar-fill" style="width:72%;animation-delay:1.2s"></div></div>
+            <span style="font-size:.7rem;color:var(--muted)">72%</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero__pill">
+        <div class="hero__pill-dot"></div>
+        All systems operational · Updated just now
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CLIENTS ══════════ -->
+<div class="clients">
+  <div class="clients__label">Trusted by South Africa's leading organisations</div>
+  <div style="overflow:hidden">
+    <div class="clients__track">
+      <div class="clients__item">Liberty</div>
+      <div class="clients__item">Centrick</div>
+      <div class="clients__item">Carrs</div>
+      <div class="clients__item">Boss Design</div>
+      <div class="clients__item">Mayhew</div>
+      <div class="clients__item">Auto Group SA</div>
+      <div class="clients__item">DriveZone</div>
+      <div class="clients__item">FleetPro</div>
+      <div class="clients__item">Liberty</div>
+      <div class="clients__item">Centrick</div>
+      <div class="clients__item">Carrs</div>
+      <div class="clients__item">Boss Design</div>
+      <div class="clients__item">Mayhew</div>
+      <div class="clients__item">Auto Group SA</div>
+      <div class="clients__item">DriveZone</div>
+      <div class="clients__item">FleetPro</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SERVICES ══════════ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section__header reveal">
+      <div class="label">What We Offer</div>
+      <h2 class="section__h2">A Complete Automotive<br><em>Service Ecosystem</em></h2>
+      <p class="section__sub">Every operational need your dealership or logistics team requires — delivered with precision, professionalism, and a personal touch.</p>
+    </div>
+    <div class="services__grid reveal delay-1">
+
+      <div class="service-card">
+        <div class="service-card__num">01</div>
+        <div class="service-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/></svg>
+        </div>
+        <h3 class="service-card__h3">Vehicle Storage &amp; Stock Yard Management</h3>
+        <p class="service-card__p">Professionally managed, secure facilities for your vehicle inventory. Full stock control, tracking, and yard management scaled to your dealership.</p>
+        <div class="service-card__link">
+          Learn more
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__num">02</div>
+        <div class="service-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="1.8"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h4M7 10h6M7 13h3"/></svg>
+        </div>
+        <h3 class="service-card__h3">Dealership Digital Development</h3>
+        <p class="service-card__p">Modern digital platforms, online showrooms, and CRM integrations that transform how dealerships engage customers and manage operations.</p>
+        <div class="service-card__link">
+          Learn more
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__num">03</div>
+        <div class="service-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <h3 class="service-card__h3">Supply of Professional Drivers</h3>
+        <p class="service-card__p">Vetted, trained, and professionally presented drivers available on demand — for deliveries, test drives, collections, and long-term placements.</p>
+        <div class="service-card__link">
+          Learn more
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__num">04</div>
+        <div class="service-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="1.8"><path d="M12 22c5.5-3.5 8-7 8-11a8 8 0 1 0-16 0c0 4 2.5 7.5 8 11z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3 class="service-card__h3">Courtesy Drivers &amp; Washbay Management</h3>
+        <p class="service-card__p">Premium courtesy driver services for your clients and comprehensive washbay management — every vehicle immaculate, every time.</p>
+        <div class="service-card__link">
+          Learn more
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__num">05</div>
+        <div class="service-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="1.8"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        </div>
+        <h3 class="service-card__h3">Vehicle Flowers &amp; Gift Presentation</h3>
+        <p class="service-card__p">Bespoke floral arrangements and ceremonial gift styling that turn a vehicle handover into an unforgettable experience for your clients.</p>
+        <div class="service-card__link">
+          Learn more
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card__num">06</div>
+        <div class="service-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <h3 class="service-card__h3">General &amp; Ancillary Services</h3>
+        <p class="service-card__p">Door-to-door logistics, windscreen chip repairs, vehicle branding, smash-and-grab installations, and fleet maintenance programmes nationwide.</p>
+        <div class="service-card__link">
+          Learn more
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ STATS BAND ══════════ -->
+<div class="stats-band">
+  <div class="container">
+    <div class="stats-band__grid">
+      <div class="stats-band__item reveal">
+        <div class="stats-band__num">16<span>+</span></div>
+        <div class="stats-band__label">Years of Experience</div>
+      </div>
+      <div class="stats-band__item reveal delay-1">
+        <div class="stats-band__num">98<span>%</span></div>
+        <div class="stats-band__label">Customer Satisfaction</div>
+      </div>
+      <div class="stats-band__item reveal delay-2">
+        <div class="stats-band__num">500<span>+</span></div>
+        <div class="stats-band__label">Vehicles Moved Monthly</div>
+      </div>
+      <div class="stats-band__item reveal delay-3">
+        <div class="stats-band__num">9</div>
+        <div class="stats-band__label">Provinces Covered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PROCESS ══════════ -->
+<section class="section section--mist" id="process">
+  <div class="container">
+    <div class="process__layout">
+      <div>
+        <div class="section__header reveal">
+          <div class="label">How It Works</div>
+          <h2 class="section__h2">Four Steps to<br><em>Seamless Delivery</em></h2>
+          <p class="section__sub">Our streamlined process ensures your request is handled with complete transparency from start to sign-off.</p>
+        </div>
+        <div class="process__steps">
+          <div class="process__step reveal delay-1">
+            <div class="process__step-num">01</div>
+            <div>
+              <div class="process__step-h">Submit Your Request</div>
+              <p class="process__step-p">Fill in our quote form or call us directly. We respond within 30 minutes during business hours with a confirmed plan and pricing.</p>
+            </div>
+          </div>
+          <div class="process__step reveal delay-2">
+            <div class="process__step-num">02</div>
+            <div>
+              <div class="process__step-h">Driver &amp; Resources Assigned</div>
+              <p class="process__step-p">We match your request to the ideal professional driver and allocate all necessary resources. You receive full driver details instantly.</p>
+            </div>
+          </div>
+          <div class="process__step reveal delay-3">
+            <div class="process__step-num">03</div>
+            <div>
+              <div class="process__step-h">Vehicle Pickup &amp; Documentation</div>
+              <p class="process__step-p">Our driver arrives on time. All vehicle condition checks are photographed, documented, and shared with you digitally in real time.</p>
+            </div>
+          </div>
+          <div class="process__step reveal delay-4">
+            <div class="process__step-num">04</div>
+            <div>
+              <div class="process__step-h">Safe Delivery &amp; Sign-Off</div>
+              <p class="process__step-p">Vehicle delivered in pristine condition. A digital service report, photos, and sign-off confirmation sent directly to you on completion.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="process__visual reveal delay-2">
+        <div class="process__visual-label">Service Dashboard · Live</div>
+        <div class="process__metrics">
+          <div class="process__metric">
+            <span class="process__metric-label">Active Movements Today</span>
+            <span class="process__metric-val">23</span>
+          </div>
+          <div class="process__metric">
+            <span class="process__metric-label">Avg. Response Time</span>
+            <span class="process__metric-val">18 min</span>
+          </div>
+          <div class="process__metric">
+            <span class="process__metric-label">Drivers Available</span>
+            <span class="process__metric-val">12</span>
+          </div>
+          <div class="process__metric">
+            <span class="process__metric-label">On-Time Delivery Rate</span>
+            <span class="process__metric-val">97.4%</span>
+          </div>
+          <div class="process__metric">
+            <span class="process__metric-label">Open Requests</span>
+            <span class="process__metric-val">4</span>
+          </div>
+        </div>
+        <div class="process__divider"></div>
+        <div class="process__status">
+          <div class="process__status-dot"></div>
+          All systems live — Mon–Sat 08:00–18:00
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about__layout">
+      <div class="about__img reveal">
+        <div class="about__img-inner">
+          <div class="about__img-year">2008</div>
+          <div class="about__badge">
+            <strong>16+</strong>
+            <span>Years of Excellence</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal delay-2">
+        <div class="label">Our Story</div>
+        <h2 class="section__h2" style="margin-top:.8rem">
+          Built on Trust.<br><em>Driven by Purpose.</em>
+        </h2>
+        <div class="about__text" style="margin-top:1.8rem">
+          <p><strong>Umqondo</strong> — meaning <em>"the plan"</em> in Zulu — was founded with a singular mission: to bring professionalism, reliability, and innovation to automotive logistics in South Africa.</p>
+          <p>What began as a specialist vehicle transportation service has grown into a comprehensive dealership support ecosystem. We transport new and used vehicles across every province, supply professional drivers, manage stock yards, and deliver digital transformation for automotive retailers.</p>
+          <p>Led by founder and CEO <strong>Selby Gumede</strong>, our team brings decades of combined automotive industry experience — and an uncompromising commitment to service excellence.</p>
+        </div>
+        <div class="about__values">
+          <div class="about__value">Nationwide coverage across all 9 South African provinces</div>
+          <div class="about__value">Fully vetted, professionally trained driver network</div>
+          <div class="about__value">Real-time digital tracking and reporting</div>
+          <div class="about__value">BBBEE compliant — proudly South African</div>
+          <div class="about__value">Monday to Saturday operations, 08:00 – 18:00</div>
+        </div>
+        <div style="margin-top:2.5rem">
+          <a href="#contact" class="btn btn--primary">
+            Partner With Us
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TEAM ══════════ -->
+<section class="section section--mist" id="team">
+  <div class="container">
+    <div class="section__header section__header--center reveal">
+      <div class="label" style="justify-content:center">Our People</div>
+      <h2 class="section__h2">The Team Behind<br><em>The Umqondo Standard</em></h2>
+      <p class="section__sub" style="margin:0 auto">A leadership team with deep roots in logistics, technology, and automotive retail across South Africa.</p>
+    </div>
+    <div class="team__grid">
+      <div class="team-card reveal delay-1">
+        <div class="team-card__img">
+          <div class="team-card__img-bg"></div>
+          <div class="team-card__avatar">🧑🏿‍💼</div>
+          <div class="team-card__overlay"></div>
+        </div>
+        <div class="team-card__name">Selby Gumede</div>
+        <div class="team-card__role">Founder & CEO</div>
+      </div>
+      <div class="team-card reveal delay-2">
+        <div class="team-card__img">
+          <div class="team-card__img-bg"></div>
+          <div class="team-card__avatar">👨🏿‍💼</div>
+          <div class="team-card__overlay"></div>
+        </div>
+        <div class="team-card__name">Phumlani Dlamini</div>
+        <div class="team-card__role">Operations Manager</div>
+      </div>
+      <div class="team-card reveal delay-3">
+        <div class="team-card__img">
+          <div class="team-card__img-bg"></div>
+          <div class="team-card__avatar">👩🏿‍💼</div>
+          <div class="team-card__overlay"></div>
+        </div>
+        <div class="team-card__name">Sanelisiwe Y. Mlaba</div>
+        <div class="team-card__role">Managing Director</div>
+      </div>
+      <div class="team-card reveal delay-4">
+        <div class="team-card__img">
+          <div class="team-card__img-bg"></div>
+          <div class="team-card__avatar">👩🏿‍💻</div>
+          <div class="team-card__overlay"></div>
+        </div>
+        <div class="team-card__name">Nontobeko Gumede</div>
+        <div class="team-card__role">Accounts Executive</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact__layout">
+      <div class="contact__info reveal">
+        <div class="label">Get In Touch</div>
+        <h2 class="section__h2" style="margin-top:.8rem">
+          Let's Move<br><em>Your Business Forward</em>
+        </h2>
+        <p class="section__sub" style="margin-top:1rem">Ready to elevate your automotive operations? Fill in the form or reach us directly via WhatsApp for an immediate response.</p>
+
+        <div class="contact__info-items">
+          <div class="contact__info-item">
+            <div class="contact__info-icon">📞</div>
+            <div>
+              <div class="contact__info-label">Phone</div>
+              <div class="contact__info-val">
+                <a href="tel:+27849086321">+27 84 908 6321</a>
+              </div>
+            </div>
+          </div>
+          <div class="contact__info-item">
+            <div class="contact__info-icon">✉️</div>
+            <div>
+              <div class="contact__info-label">Email</div>
+              <div class="contact__info-val">
+                <a href="mailto:selby@umqondo.co.za">selby@umqondo.co.za</a>
+              </div>
+            </div>
+          </div>
+          <div class="contact__info-item">
+            <div class="contact__info-icon">📍</div>
+            <div>
+              <div class="contact__info-label">Office</div>
+              <div class="contact__info-val">5 Carol Court, Lawrence Road<br>Essenwood, Durban</div>
+            </div>
+          </div>
+          <div class="contact__info-item">
+            <div class="contact__info-icon">🕐</div>
+            <div>
+              <div class="contact__info-label">Hours</div>
+              <div class="contact__info-val">Mon – Sat: 08:00 – 18:00</div>
+            </div>
+          </div>
+        </div>
+
+        <a href="https://wa.me/27849086321?text=Hi+Umqondo!+I'd+like+to+request+a+quote." class="wa-link" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+
+      <div class="contact__form reveal delay-2">
+        <h3>Request a Quote</h3>
+        <div class="form__row">
+          <div class="form__group">
+            <label class="form__label">First Name</label>
+            <input type="text" class="form__input" placeholder="Sipho">
+          </div>
+          <div class="form__group">
+            <label class="form__label">Last Name</label>
+            <input type="text" class="form__input" placeholder="Dlamini">
+          </div>
+        </div>
+        <div class="form__row">
+          <div class="form__group">
+            <label class="form__label">Email</label>
+            <input type="email" class="form__input" placeholder="you@company.co.za">
+          </div>
+          <div class="form__group">
+            <label class="form__label">Phone</label>
+            <input type="tel" class="form__input" placeholder="+27 82 000 0000">
+          </div>
+        </div>
+        <div class="form__group">
+          <label class="form__label">Service Required</label>
+          <select class="form__select">
+            <option value="">Select a service...</option>
+            <option>Vehicle Storage &amp; Stock Yard Management</option>
+            <option>Dealership Digital Development</option>
+            <option>Supply of Professional Drivers</option>
+            <option>Courtesy Drivers &amp; Washbay Management</option>
+            <option>Vehicle Flowers &amp; Gift Presentation</option>
+            <option>General Services</option>
+            <option>Multiple Services</option>
+          </select>
+        </div>
+        <div class="form__group">
+          <label class="form__label">Message</label>
+          <textarea class="form__textarea" placeholder="Tell us about your requirements, fleet size, timeframes, or any specific needs..."></textarea>
+        </div>
+        <button class="form__submit" onclick="submitForm(this)">
+          Send Request
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__logo">
+          <div class="footer__logo-hex">U</div>
+          UMQONDO<span style="color:var(--red)">WETHU</span>
+        </div>
+        <p class="footer__brand-tagline">South Africa's trusted automotive logistics and dealership support partner. Moving vehicles, powering dealerships — since 2008.</p>
+      </div>
+      <div>
+        <div class="footer__col-h">Services</div>
+        <div class="footer__col-links">
+          <a href="#services">Vehicle Storage</a>
+          <a href="#services">Professional Drivers</a>
+          <a href="#services">Washbay Management</a>
+          <a href="#services">Digital Development</a>
+          <a href="#services">Gift Presentation</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-h">Company</div>
+        <div class="footer__col-links">
+          <a href="#about">About Umqondo</a>
+          <a href="#team">Our Team</a>
+          <a href="#process">How It Works</a>
+          <a href="#contact">Contact</a>
+          <a href="#contact">Careers</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-h">Contact</div>
+        <div class="footer__col-links">
+          <a href="tel:+27849086321">+27 84 908 6321</a>
+          <a href="mailto:selby@umqondo.co.za">selby@umqondo.co.za</a>
+          <a href="#">Essenwood, Durban</a>
+          <a href="#">Mon – Sat: 08:00 – 18:00</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Umqondo Logistics (Pty) Ltd. All rights reserved. Proudly South African.</span>
+      <div class="footer__bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">BBBEE Certificate</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+// Mobile menu
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('mobileClose').addEventListener('click', closeMobile);
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Form submit
+function submitForm(btn) {
+  btn.textContent = '✓ Request received — we\'ll be in touch within 30 minutes.';
+  btn.style.background = '#22C55E';
+  btn.style.pointerEvents = 'none';
+}
+</script>
+</body>
+</html>
