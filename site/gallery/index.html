@@ -7,6 +7,127 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Gallery grid ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 3rem;
+    }
+    .gallery-thumb {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--mist);
+      cursor: pointer;
+    }
+    .gallery-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .gallery-thumb:hover img { transform: scale(1.06); }
+    .gallery-thumb__overlay {
+      position: absolute; inset: 0;
+      background: rgba(12,27,51,0);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .3s ease;
+    }
+    .gallery-thumb:hover .gallery-thumb__overlay {
+      background: rgba(12,27,51,.45);
+    }
+    .gallery-thumb__icon {
+      opacity: 0; transform: scale(.8);
+      transition: opacity .3s ease, transform .3s ease;
+      color: #fff;
+    }
+    .gallery-thumb:hover .gallery-thumb__icon {
+      opacity: 1; transform: scale(1);
+    }
+
+    /* ── Videos section ── */
+    .gallery-videos-section { margin-top: 4rem; }
+    .gallery-videos-section .gallery-section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem,3vw,2.2rem);
+      font-weight: 300; color: var(--navy);
+      margin-top: .5rem; margin-bottom: 1.8rem;
+    }
+    .gallery-videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .gallery-video-card {
+      aspect-ratio: 16/9;
+      border-radius: 8px; overflow: hidden;
+      background: var(--navy);
+      box-shadow: 0 6px 30px rgba(0,0,0,.12);
+    }
+    .gallery-video-card video {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(8,14,24,.95);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox__img {
+      max-width: 90vw; max-height: 88vh;
+      object-fit: contain; border-radius: 4px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.5);
+      display: block;
+    }
+    .lightbox__close {
+      position: absolute; top: 1.2rem; right: 1.4rem;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      border: none; cursor: pointer;
+      color: #fff; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .lightbox__close:hover { background: var(--red); }
+    .lightbox__btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      border: none; cursor: pointer;
+      color: #fff; font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .lightbox__btn:hover { background: var(--red); }
+    .lightbox__btn--prev { left: 1.2rem; }
+    .lightbox__btn--next { right: 1.2rem; }
+    .lightbox__counter {
+      position: absolute; bottom: 1.2rem; left: 50%;
+      transform: translateX(-50%);
+      font-size: .75rem; color: rgba(255,255,255,.5);
+      letter-spacing: .1em;
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:1024px) {
+      .gallery-grid { grid-template-columns: repeat(3,1fr); }
+      .gallery-videos-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media(max-width:640px) {
+      .gallery-grid { grid-template-columns: repeat(2,1fr); gap:4px; }
+      .gallery-videos-grid { grid-template-columns: 1fr; }
+      .lightbox__btn--prev { left:.4rem; }
+      .lightbox__btn--next { right:.4rem; }
+    }
+  </style>
 </head>
 <body data-page="gallery">
 
@@ -49,89 +170,100 @@
 <section class="section section--page-top">
   <div class="container">
 
-    <!-- Page header -->
-    <div class="section__header reveal">
+    <div class="section__header">
       <div class="label">Our Work</div>
       <h2 class="section__h2">UmqondoWethu in<br><em>Motion</em></h2>
       <p class="section__sub">A look at our operations, fleet, and team across South Africa.</p>
     </div>
 
-    <!-- ── PHOTOS ── -->
-    <div class="gallery-section">
-      <div class="gallery-section__header">
-        <div class="label">Photography</div>
-        <h3 class="gallery-section__h3">Operations &amp; Fleet</h3>
+    <!-- Photos grid -->
+    <div class="gallery-grid" id="photoGrid">
+      <div class="gallery-thumb" data-index="0">
+        <img src="GalleryIMG/gallery1.JPG" alt="Umqondo operations">
+        <div class="gallery-thumb__overlay">
+          <div class="gallery-thumb__icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
       </div>
-      <div class="gallery__masonry">
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery1.JPG" alt="Umqondo operations">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery2.jpg" alt="Umqondo fleet">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery3.JPG" alt="Umqondo logistics">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery4.JPG" alt="Umqondo team">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery5.JPG" alt="Umqondo vehicles">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery8.jpg" alt="Umqondo dealership">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery9.jpg" alt="Umqondo service">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery10.JPG" alt="Umqondo transport">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery11.JPG" alt="Umqondo operations">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery12.JPG" alt="Umqondo fleet">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery13.JPG" alt="Umqondo logistics">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery15.JPG" alt="Umqondo team">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery16.JPG" alt="Umqondo vehicles">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery17.JPG" alt="Umqondo operations">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery18.JPG" alt="Umqondo fleet">
-        </div>
-        <div class="gallery__masonry-item">
-          <img src="GalleryIMG/gallery19.JPG" alt="Umqondo logistics">
-        </div>
+      <div class="gallery-thumb" data-index="1">
+        <img src="GalleryIMG/gallery2.jpg" alt="Umqondo fleet">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="2">
+        <img src="GalleryIMG/gallery3.JPG" alt="Umqondo logistics">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="3">
+        <img src="GalleryIMG/gallery4.JPG" alt="Umqondo team">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="4">
+        <img src="GalleryIMG/gallery5.JPG" alt="Umqondo vehicles">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="5">
+        <img src="GalleryIMG/gallery8.jpg" alt="Umqondo dealership">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="6">
+        <img src="GalleryIMG/gallery9.jpg" alt="Umqondo service">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="7">
+        <img src="GalleryIMG/gallery10.JPG" alt="Umqondo transport">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="8">
+        <img src="GalleryIMG/gallery11.JPG" alt="Umqondo operations">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="9">
+        <img src="GalleryIMG/gallery12.JPG" alt="Umqondo fleet">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="10">
+        <img src="GalleryIMG/gallery13.JPG" alt="Umqondo logistics">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="11">
+        <img src="GalleryIMG/gallery15.JPG" alt="Umqondo team">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="12">
+        <img src="GalleryIMG/gallery16.JPG" alt="Umqondo vehicles">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="13">
+        <img src="GalleryIMG/gallery17.JPG" alt="Umqondo operations">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="14">
+        <img src="GalleryIMG/gallery18.JPG" alt="Umqondo fleet">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+      <div class="gallery-thumb" data-index="15">
+        <img src="GalleryIMG/gallery19.JPG" alt="Umqondo logistics">
+        <div class="gallery-thumb__overlay"><div class="gallery-thumb__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
       </div>
     </div>
 
-    <!-- ── VIDEOS ── -->
-    <div class="gallery-section gallery-section--videos" style="margin-top:5rem">
-      <div class="gallery-section__header">
-        <div class="label">Video</div>
-        <h3 class="gallery-section__h3">Brand &amp; Operations Footage</h3>
-      </div>
-      <div class="gallery__videos">
-        <div class="gallery__video-item">
+    <!-- Videos -->
+    <div class="gallery-videos-section">
+      <div class="label">Video</div>
+      <h3 class="gallery-videos-section .gallery-section-title" style="font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;color:var(--navy);margin-top:.5rem;margin-bottom:1.8rem;">Brand &amp; Operations Footage</h3>
+      <div class="gallery-videos-grid">
+        <div class="gallery-video-card">
           <video controls muted loop playsinline>
             <source src="GalleryIMG/gallery6.MP4" type="video/mp4">
           </video>
         </div>
-        <div class="gallery__video-item">
+        <div class="gallery-video-card">
           <video controls muted loop playsinline>
             <source src="GalleryIMG/gallery7.MP4" type="video/mp4">
           </video>
         </div>
-        <div class="gallery__video-item">
+        <div class="gallery-video-card">
           <video controls muted loop playsinline>
             <source src="GalleryIMG/gallery14.MP4" type="video/mp4">
           </video>
@@ -141,6 +273,15 @@
 
   </div>
 </section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lbClose">✕</button>
+  <button class="lightbox__btn lightbox__btn--prev" id="lbPrev">&#8592;</button>
+  <img class="lightbox__img" id="lbImg" src="" alt="">
+  <button class="lightbox__btn lightbox__btn--next" id="lbNext">&#8594;</button>
+  <div class="lightbox__counter" id="lbCounter"></div>
+</div>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -194,5 +335,47 @@
 </footer>
 
 <script src="../js/main.js"></script>
+<script>
+  const images = [
+    'GalleryIMG/gallery1.JPG','GalleryIMG/gallery2.jpg','GalleryIMG/gallery3.JPG',
+    'GalleryIMG/gallery4.JPG','GalleryIMG/gallery5.JPG','GalleryIMG/gallery8.jpg',
+    'GalleryIMG/gallery9.jpg','GalleryIMG/gallery10.JPG','GalleryIMG/gallery11.JPG',
+    'GalleryIMG/gallery12.JPG','GalleryIMG/gallery13.JPG','GalleryIMG/gallery15.JPG',
+    'GalleryIMG/gallery16.JPG','GalleryIMG/gallery17.JPG','GalleryIMG/gallery18.JPG',
+    'GalleryIMG/gallery19.JPG'
+  ];
+  let current = 0;
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCounter = document.getElementById('lbCounter');
+
+  function openLightbox(index) {
+    current = index;
+    lbImg.src = images[current];
+    lbCounter.textContent = (current + 1) + ' / ' + images.length;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function showNext() { current = (current + 1) % images.length; lbImg.src = images[current]; lbCounter.textContent = (current + 1) + ' / ' + images.length; }
+  function showPrev() { current = (current - 1 + images.length) % images.length; lbImg.src = images[current]; lbCounter.textContent = (current + 1) + ' / ' + images.length; }
+
+  document.querySelectorAll('.gallery-thumb').forEach(el => {
+    el.addEventListener('click', () => openLightbox(parseInt(el.dataset.index)));
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbNext').addEventListener('click', showNext);
+  document.getElementById('lbPrev').addEventListener('click', showPrev);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') showNext();
+    if (e.key === 'ArrowLeft') showPrev();
+  });
+</script>
 </body>
 </html>
